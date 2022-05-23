@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_manager_app/screens/widgets/custom_tabbar.dart';
 
 import 'add_expense_screen.dart';
 import 'add_income_screen.dart';
@@ -14,29 +15,9 @@ class AddIncomeAndExpenseScreen extends StatefulWidget {
 class _AddIncomeAndExpenseScreenState extends State<AddIncomeAndExpenseScreen> {
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Add Expense and Income'),
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          bottom: TabBar(tabs: [
-            Tab(
-              text: 'Expense',
-            ),
-            Tab(
-              text: 'Income',
-            )
-          ]),
-        ),
-        body: TabBarView(children: [AddExpenseScreen(),AddIncomeScreen() ]),
-      ),
-    );
+    return CustomTabBar(
+        expenseScreen: AddExpenseScreen(),
+        incomeScreen: AddIncomeScreen(),
+        TabName: 'Add Expense and Income');
   }
 }

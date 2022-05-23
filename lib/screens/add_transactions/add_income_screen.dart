@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:money_manager_app/functions/functions.dart';
 import 'package:money_manager_app/model/moneymanagermodel.dart';
+
+import '../widgets/custom_valuelistenablebuilder.dart';
 
 class AddIncomeScreen extends StatefulWidget {
   const AddIncomeScreen({Key? key}) : super(key: key);
@@ -14,13 +14,17 @@ class AddIncomeScreen extends StatefulWidget {
 
 class _AddIncomeScreenState extends State<AddIncomeScreen> {
   var incomeBox = Hive.box<categoryModel>('incomeCategoryBox');
-  var transactionBox =  Hive.box<addExpAndIncModel>('transactionBox');
+  var transactionBox = Hive.box<addExpAndIncModel>('transactionBox');
 
+  ValueNotifier<String> categoryHintText = ValueNotifier('');
+  bool isTransactionPage = true;
+  void changeHintText(newString) {
+    categoryHintText.value = newString;
+  }
 
   DateTime date = DateTime.now();
   final incomeController = TextEditingController();
   final amountController = TextEditingController();
-  String? categoryHintText;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,14 +78,21 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                                 Flexible(
                                     child: Container(
                                   width: 250,
-                                  child: TextField(
-                                    readOnly: true,
-                                    decoration: InputDecoration(
-                                        hintText: categoryHintText),
-                                    onTap: () {
-                                      bottomSheetOfIncome(context);
-                                    },
-                                  ),
+                                  child: ValueListenableBuilder(
+                                      valueListenable: categoryHintText,
+                                      builder: (BuildContext context,
+                                          String newValue, Widget? child) {
+                                        return TextField(
+                                          controller: incomeController,
+                                          decoration: InputDecoration(
+                                              hintText: categoryHintText.value),
+                                          readOnly: true,
+                                          onTap: () {
+                                            bottomSheetOfIncome(context);
+                                          },
+                                        );
+                                      },
+                                    ),
                                 ))
                               ],
                             ),
@@ -94,7 +105,6 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                                         width: 250,
                                         child: TextField(
                                           keyboardType: TextInputType.number,
-
                                           controller: amountController,
                                         )))
                               ],
@@ -114,16 +124,18 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                           onPressed: () {
                             int amounts = int.parse(amountController.text);
                             final inc = addExpAndIncModel(
-                                categoryName: categoryHintText,
+                                categoryName: categoryHintText.value,
                                 amount: amounts,
                                 dateOftransaction: date,
                                 transactionType: true);
                             transactionBox.add(inc);
-                            
+
                             Navigator.pop(context);
                           },
                           child: Text('save')),
-                      ElevatedButton(onPressed: () {}, child: Text('Continue'))
+                      ElevatedButton(onPressed: () {
+
+                      }, child: Text('Continue'))
                     ],
                   ),
                 ],
@@ -208,30 +220,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                       ],
                     ),
                   ))),
-              ValueListenableBuilder(
-                  valueListenable:
-                      Hive.box<categoryModel>('incomecategoryBox').listenable(),
-                  builder: (BuildContext ctx, Box<categoryModel> newBox,
-                      Widget? child) {
-                    List<categoryModel> incomeData = newBox.values.toList();
-
-                    return ListView.builder(
-                        itemCount: incomeData.length,
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemBuilder: (ctx, index) {
-                          return ListTile(
-                            onTap: () {
-                              setState(() {
-                                categoryHintText =
-                                    incomeData[index].categoryName;
-                              });
-                              Navigator.pop(context);
-                            },
-                            title: Text(incomeData[index].categoryName),
-                          );
-                        });
-                  })
+               Expanded(
+                child: CustomValuelistenableBuilder(boxName:'incomeCategoryBox' , categoryType: true,customFunction:changeHintText ,isTransactionType: true,)
+              )
             ],
           );
         });

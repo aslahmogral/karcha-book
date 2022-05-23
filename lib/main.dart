@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:money_manager_app/screens/bottom_navigation_screen.dart';
@@ -11,6 +10,10 @@ Future main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(addExpAndIncModelAdapter());
   Hive.registerAdapter(categoryModelAdapter());
+  //created three boxes of hive 
+  // 1- expense category
+  // 2- income category
+  // 3- transaction
   await Hive.openBox<categoryModel>('expenseCategoryBox');
   await Hive.openBox<categoryModel>('incomeCategoryBox');
   await Hive.openBox<addExpAndIncModel>('transactionBox');

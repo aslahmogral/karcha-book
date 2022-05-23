@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:money_manager_app/functions/functions.dart';
 import 'package:money_manager_app/model/moneymanagermodel.dart';
-import 'package:money_manager_app/screens/chart_screen/expense_chart_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:money_manager_app/screens/widgets/custom_dialogbox.dart';
+import 'package:money_manager_app/screens/widgets/custom_valuelistenablebuilder.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   const AddExpenseScreen({Key? key}) : super(key: key);
@@ -14,13 +13,16 @@ class AddExpenseScreen extends StatefulWidget {
 }
 
 class _AddExpenseScreenState extends State<AddExpenseScreen> {
-  var transactionBox =  Hive.box<addExpAndIncModel>('transactionBox');
+  var transactionBox = Hive.box<addExpAndIncModel>('transactionBox');
   var expenseBox = Hive.box<categoryModel>('expenseCategoryBox');
-
+  ValueNotifier<String> categoryHintText = ValueNotifier('');
   DateTime date = DateTime.now();
-  String? categoryHintText;
-  final expenseController = TextEditingController();
+  TextEditingController expenseController = TextEditingController();
   final amountController = TextEditingController();
+  bool isTransactionPage = true;
+  void changeHintText(newString) {
+    categoryHintText.value = newString;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,16 +74,25 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                               children: [
                                 Text('Category'),
                                 Flexible(
-                                    child: Container(
-                                        width: 250,
-                                        child: TextField(
+                                  child: Container(
+                                    width: 250,
+                                    child: ValueListenableBuilder(
+                                      valueListenable: categoryHintText,
+                                      builder: (BuildContext context,
+                                          String newValue, Widget? child) {
+                                        return TextField(
+                                          controller: expenseController,
                                           decoration: InputDecoration(
-                                              hintText: categoryHintText),
+                                              hintText: categoryHintText.value),
                                           readOnly: true,
                                           onTap: () {
                                             bottomSheetOfExpense(context);
                                           },
-                                        )))
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                             Row(
@@ -112,12 +123,12 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           onPressed: () {
                             int amounts = int.parse(amountController.text);
                             final exp = addExpAndIncModel(
-                                categoryName: categoryHintText,
+                                categoryName: categoryHintText.value,
                                 amount: amounts,
                                 dateOftransaction: date,
                                 transactionType: false);
                             transactionBox.add(exp);
-                            
+
                             Navigator.pop(context);
                           },
                           child: Text('save')),
@@ -146,53 +157,14 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            //-------------------------------------
-
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    // title: Text('Add expense category'),
-                                    content: TextField(
+                                  return CustomDialogBox(
                                       controller: expenseController,
-                                      decoration: InputDecoration(
-                                          hintText: 'expense category'),
-                                    ),
-                                    actions: [
-                                      ElevatedButton(
-                                          onPressed: () {
-                                            // final expeseDetails = categoryModel(
-                                            //     categoryName:
-                                            //         expenseController.text, transactionType: true);
-                                            // addCategory(expeseDetails);
-                                            // expenseController.clear();
-                                            // Navigator.pop(context);
-
-                                            if (expenseController
-                                                .text.isEmpty) {
-                                              expenseController.clear();
-                                              Navigator.pop(context);
-                                              return;
-                                            } else {
-                                              final expenseDetails =
-                                                  categoryModel(
-                                                      categoryName:
-                                                          expenseController
-                                                              .text,
-                                                      categoryType: false);
-
-                                              expenseBox.add(
-                                                  expenseDetails);
-                                              expenseController.clear();
-                                              Navigator.pop(context);
-                                            }
-                                          },
-                                          child: Text('Save'))
-                                    ],
-                                  );
+                                      box: expenseBox,
+                                      transactionType: false);
                                 });
-
-                            //--------------------------------------
                           },
                           child: Icon(Icons.add, color: Colors.white),
                         ),
@@ -208,30 +180,13 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                       ],
                     ),
                   ))),
-              ValueListenableBuilder(
-                  valueListenable: Hive.box<categoryModel>('expenseCategoryBox').listenable(),
-                  builder: (BuildContext ctx,
-                      Box<categoryModel> newBox, Widget? child) {
-
-                         List<categoryModel> expenseData = newBox.values.toList();
-                    return ListView.builder(
-                        itemCount: expenseData.length,
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemBuilder: (ctx, index) {
-                          return ListTile(
-                            onTap: () {
-                              setState(() {
-                                categoryHintText =
-                                    expenseData[index].categoryName;
-                              });
-                              Navigator.pop(context);
-                            },
-                            title:
-                                Text(expenseData[index].categoryName),
-                          );
-                        });
-                  })
+              Expanded(
+                  child: CustomValuelistenableBuilder(
+                boxName: 'expenseCategoryBox',
+                categoryType: false,
+                customFunction: changeHintText,
+                isTransactionType: true,
+              ))
             ],
           );
         });

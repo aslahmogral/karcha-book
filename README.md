@@ -1,6 +1,4 @@
-# money_manager_app
-
-A new Flutter project.
+it is an expense manager app 
 
 ## Getting Started
 

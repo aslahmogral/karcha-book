@@ -121,6 +121,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     children: [
                       ElevatedButton(
                           onPressed: () {
+                            
                             int amounts = int.parse(amountController.text);
                             final exp = addExpAndIncModel(
                                 categoryName: categoryHintText.value,

@@ -1,5 +1,6 @@
 class Total {
   final String categoryName;
   final double total;
-  Total({required this.categoryName, required this.total});
+  final double percentage;
+  Total( {required this.categoryName, required this.total,required this.percentage});
 }

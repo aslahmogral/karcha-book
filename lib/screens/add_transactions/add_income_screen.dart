@@ -129,6 +129,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                                 dateOftransaction: date,
                                 transactionType: true);
                             transactionBox.add(inc);
+                            print(inc.categoryType);
 
                             Navigator.pop(context);
                           },

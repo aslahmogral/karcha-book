@@ -49,8 +49,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       .listenable(),
                   builder: (BuildContext ctx, Box<addExpAndIncModel> newBox,
                       Widget? child) {
-                    List<addExpAndIncModel> transactionData =
-                        newBox.values.toList();
+                   
+
+                    List<addExpAndIncModel> sortedData = selectedItem == 'monthly'
+                      ? filteredList(newBox)[0]
+                      : filteredList(newBox)[1];
                     return Column(
                       children: [
                         Row(
@@ -94,21 +97,29 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                             Container(
+                              height: 35,
                                 decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.blue)),
-                                child: DropdownButton<String>(
-                                    items: items
-                                        .map((item) => DropdownMenuItem(
-                                              child: Text(item),
-                                              value: item,
-                                            ))
-                                        .toList(),
-                                    value: selectedItem,
-                                    onChanged: (item) {
-                                      setState(() {
-                                        selectedItem = item;
-                                      });
-                                    }))
+                                    
+                                    color: Color.fromARGB(255, 142, 204, 255),
+                                    borderRadius: BorderRadius.circular(10)
+                                    ),
+                                    
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: DropdownButton<String>(
+                                      items: items
+                                          .map((item) => DropdownMenuItem(
+                                                child: Text(item),
+                                                value: item,
+                                              ))
+                                          .toList(),
+                                      value: selectedItem,
+                                      onChanged: (item) {
+                                        setState(() {
+                                          selectedItem = item;
+                                        });
+                                      }),
+                                ))
                           ],
                         ),
                         Divider(),
@@ -118,13 +129,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             Column(
                               children: [
                                 Text('income'),
-                                Text(incomeSum(transactionData).toString())
+                                Text(incomeSum(sortedData).toString())
                               ],
                             ),
                             Column(
                               children: [
                                 Text('expense'),
-                                Text(expenseSum(transactionData).toString())
+                                Text(expenseSum(sortedData).toString())
                               ],
                             ),
                             Column(
@@ -151,6 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       : filteredList(newBox)[1];
 
                   sortedData = sortedData.reversed.toList();
+                  
 
                   List keys = newBox.keys.toList();
                   keys = keys.reversed.toList();

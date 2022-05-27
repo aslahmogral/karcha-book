@@ -24,6 +24,8 @@ class addExpAndIncModel {
   final categoryName;
   @HiveField(3)
   final int amount;
+
+  var categoryType;
   addExpAndIncModel(
       {required this.categoryName,
       required this.amount,

@@ -16,22 +16,11 @@ class BottomNavigation extends StatefulWidget {
   State<BottomNavigation> createState() => _BottomNavigationState();
 }
 
-class  _BottomNavigationState  extends State<BottomNavigation> {
+class _BottomNavigationState extends State<BottomNavigation> {
+  late ScrollController controller;
   int currentIndex = 0;
-  final screens = [
-    Center(
-      child: Text('Bismillah'),
-    ),
-    Center(
-      child: Text('Alhamdulillah'),
-    ),
-    Center(
-      child: Text('Allahu akbar'),
-    ),
-    Center(
-      child: Text('la ilaha illahallah'),
-    ),
-  ];
+
+  
 
   // final screens2 = [screenOne(), screetwo(), screenThree(), screenFour()];
 
@@ -39,14 +28,13 @@ class  _BottomNavigationState  extends State<BottomNavigation> {
     HomeScreen(),
     ChartScreen(),
     CategoryScreen(),
-    SettingScreen()
+    
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: screensOfProject[currentIndex],
-     
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) => setState(() {
           currentIndex = index;
@@ -65,10 +53,7 @@ class  _BottomNavigationState  extends State<BottomNavigation> {
               icon: Icon(Icons.category),
               label: 'category',
               backgroundColor: Colors.blue),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'settings',
-              backgroundColor: Colors.blue),
+         
         ],
       ),
     );

@@ -20,35 +20,34 @@ class _ExpenseChartScreenState extends State<ExpenseChartScreen> {
 //---------------------------------
 
   var transactionBox = Hive.box<addExpAndIncModel>('transactionBox');
-  var incomeBox = Hive.box<categoryModel>('incomeCategoryBox');
   var expenseBox = Hive.box<categoryModel>('expenseCategoryBox');
   Map<String, double> map2 = {};
 
   List<Total> totalExpense = [];
 
   List<Total> getTotalIncome(
-      Box<addExpAndIncModel> newBox, Box<categoryModel> newBox2) {
+      Box<addExpAndIncModel> newBox, Box<categoryModel> categoryBox) {
     List<addExpAndIncModel> boxList = newBox.values.toList();
-    List<categoryModel> boxList2 = newBox2.values.toList();
+    List<categoryModel> categoryList = categoryBox.values.toList();
     List<Total> totalOfCategory = [];
 
     double totalOfincome = incomeSum(boxList);
 
-    for (int i = 0; i < boxList2.length; i++) {
-
+    for (int i = 0; i < categoryList.length; i++) {
       double amount = 0;
 
-      if (boxList2[i].categoryType == true) {
+      if (categoryList[i].categoryType == false) {
         for (int j = 0; j < boxList.length; j++) {
-          if (boxList2[i].categoryName == boxList[j].categoryName) {
+          if (categoryList[i].categoryName == boxList[j].categoryName) {
             amount += boxList[j].amount;
           }
         }
+
         if (amount != 0) {
           var percentage = ((amount.roundToDouble() / totalOfincome) * 100);
 
           totalOfCategory.add(Total(
-            categoryName: boxList2[i].categoryName,
+            categoryName: categoryList[i].categoryName,
             total: amount,
             percentage: percentage,
           ));
@@ -57,7 +56,6 @@ class _ExpenseChartScreenState extends State<ExpenseChartScreen> {
     }
     return totalOfCategory;
   }
-
 
 // totalOfCateegory
 
@@ -68,13 +66,12 @@ class _ExpenseChartScreenState extends State<ExpenseChartScreen> {
         incomeTotal += list[i].amount;
       }
     }
-    // totalIncome = incomeTotal;
     return incomeTotal;
   }
 
   // convert
 
-  // generate random color list for pie chart 
+  // generate random color list for pie chart
   List<Color> randomColorList(Box<categoryModel> colorBox) {
     List<Color> colorList = [];
     for (int i = 0; i < colorBox.length; i++) {
@@ -82,11 +79,10 @@ class _ExpenseChartScreenState extends State<ExpenseChartScreen> {
     }
     return colorList;
   }
-  
 
   @override
   Widget build(BuildContext context) {
-    List<Total> totalOfChart = getTotalIncome(transactionBox, incomeBox);
+    List<Total> totalOfChart = getTotalIncome(transactionBox, expenseBox);
     totalOfChart
         .forEach((Total) => map2[Total.categoryName] = Total.percentage);
     return Column(
@@ -98,7 +94,7 @@ class _ExpenseChartScreenState extends State<ExpenseChartScreen> {
               Center(
                   child: PieChart(
                 dataMap: map2,
-                colorList: randomColorList(incomeBox),
+                colorList: randomColorList(expenseBox),
                 chartRadius: MediaQuery.of(context).size.width / 2,
               )),
             ],
@@ -111,23 +107,22 @@ class _ExpenseChartScreenState extends State<ExpenseChartScreen> {
                     Hive.box<addExpAndIncModel>('transactionBox').listenable(),
                 builder: (BuildContext context, Box<addExpAndIncModel> newBox,
                     Widget? child) {
-                  List<Total> incomeList = getTotalIncome(newBox, incomeBox);
+                  List<Total> incomeList = getTotalIncome(newBox, expenseBox);
                   return ListView.builder(
                       itemCount: incomeList.length,
                       itemBuilder: (context, index) {
                         return ListTile(
                           title: Text(incomeList[index].categoryName),
                           trailing: Text(incomeList[index].total.toString()),
-                          leading: RichText(text: TextSpan(
-                            
-                            text: '${incomeList[index].percentage.toStringAsFixed(2)}%',
+                          leading: RichText(
+                              text: TextSpan(
+                            text:
+                                '${incomeList[index].percentage.toStringAsFixed(2)}%',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 20,
                             ),
                           )),
-                          
-                              
                         );
                       });
                 }),

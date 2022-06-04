@@ -5,12 +5,14 @@ import 'package:money_manager_app/screens/bottom_navigation_screen.dart';
 
 import 'model/moneymanagermodel.dart';
 
+const colorP = const Color(0xFFB74093);
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(addExpAndIncModelAdapter());
   Hive.registerAdapter(categoryModelAdapter());
-  //created three boxes of hive 
+  //created three boxes of hive
   // 1- expense category
   // 2- income category
   // 3- transaction
@@ -27,8 +29,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
+        theme: Theme.of(context).copyWith(
+          colorScheme: Theme.of(context).colorScheme.copyWith(
+                primary: const Color(0xff004bac),
+              ),
         ),
         home: BottomNavigation());
   }

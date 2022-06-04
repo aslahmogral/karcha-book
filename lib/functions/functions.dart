@@ -1,37 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:money_manager_app/model/moneymanagermodel.dart';
 
-
-
-
-
-
-//for adding income and exp category
-ValueNotifier<List<categoryModel>> IncomeCategorylist = ValueNotifier([]); 
-ValueNotifier<List<categoryModel>> ExpenseCategorylist = ValueNotifier([]);
-
-void addIncomeCategory(categoryModel value) {
-  IncomeCategorylist.value.add(value);
-  IncomeCategorylist.notifyListeners();
-}
-
-void addExpenseCategory(categoryModel value) {
-  ExpenseCategorylist.value.add(value);
-  ExpenseCategorylist.notifyListeners();
-}
-
-// for adding income and exp transaction
-ValueNotifier<List<addExpAndIncModel>> ExpenseAndIncomeList = ValueNotifier([]);
-
-
-void addExpenseAndIncomeList(addExpAndIncModel value) {
-  ExpenseAndIncomeList.value.add(value);
-  ExpenseAndIncomeList.notifyListeners();
-}
-
-
-
-
-
-
-
+// make a global variable of color
+final KarchaMaincolor = Color(0xff004bac);
+final KarchaBasecolor = Color(0xFFFFC107);
+final KarchaIncomecolor = Color(0xFF00C853);
+final KarchaExpensecolor = Color(0xFFF44336);
+final KarchaFabcolor = Color(0xffa10c50);

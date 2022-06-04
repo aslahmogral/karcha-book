@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:money_manager_app/data/piedata.dart';
+import 'package:money_manager_app/functions/functions.dart';
 import 'package:money_manager_app/model/moneymanagermodel.dart';
 import 'package:money_manager_app/screens/add_transactions/add_main_screen.dart';
 
@@ -23,15 +25,15 @@ class _HomeScreenState extends State<HomeScreen> {
   double totalIncome = 0;
   List<int> incomel = [];
   List expensel = [];
-  List<String> items = ['monthly', 'yearly'];
-  String? selectedItem = 'monthly';
+  List<String> items = ['Monthly', 'Yearly'];
+  String? selectedItem = 'Monthly';
   DateTime monthYearNow = DateTime.now();
   final DateFormat monthFormat = DateFormat("MMM yyyy");
   final DateFormat yearFormat = DateFormat("yyyy");
 
   void initstate() {
     super.initState();
-    scrollController =ScrollController();
+    scrollController = ScrollController();
   }
 
   void dispose() {
@@ -44,7 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         backgroundColor: Color.fromARGB(255, 237, 236, 236),
         appBar: AppBar(
-          title: Text('Money Manager'),
+          backgroundColor: Color(0xff004bac),
+          title: Text('Karcha Book'),
           centerTitle: true,
         ),
         body: Column(
@@ -64,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (BuildContext ctx, Box<addExpAndIncModel> newBox,
                         Widget? child) {
                       List<addExpAndIncModel> sortedData =
-                          selectedItem == 'monthly'
+                          selectedItem == 'Monthly'
                               ? filteredList(newBox)[0]
                               : filteredList(newBox)[1];
                       return Column(
@@ -76,59 +79,66 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   IconButton(
                                       onPressed: () {
-                                        if (selectedItem == 'monthly') {
+                                        if (selectedItem == 'Monthly') {
                                           monthYearNow = DateTime(
                                               monthYearNow.year,
                                               monthYearNow.month - 1);
                                           setState(() {});
-                                        } else if (selectedItem == 'yearly') {
+                                        } else if (selectedItem == 'Yearly') {
                                           monthYearNow = DateTime(
                                               monthYearNow.year - 1,
                                               monthYearNow.month);
                                           setState(() {});
                                         }
                                       },
-                                      icon: Icon(Icons.arrow_back)),
-                                  Text(selectedItem == 'monthly'
+                                      icon: Icon(
+                                        Icons.arrow_back_ios,
+                                        color: Color(0xff004bac),
+                                      )),
+                                  Text(selectedItem == 'Monthly'
                                       ? monthFormat.format(monthYearNow)
                                       : yearFormat.format(monthYearNow)),
                                   IconButton(
                                       onPressed: () {
-                                        if (selectedItem == 'monthly') {
+                                        if (selectedItem == 'Monthly') {
                                           monthYearNow = DateTime(
                                               monthYearNow.year,
                                               monthYearNow.month + 1);
                                           setState(() {});
-                                        } else if (selectedItem == 'yearly') {
+                                        } else if (selectedItem == 'Yearly') {
                                           monthYearNow = DateTime(
                                               monthYearNow.year + 1,
                                               monthYearNow.month);
                                           setState(() {});
                                         }
                                       },
-                                      icon: Icon(Icons.arrow_forward)),
+                                      icon: Icon(Icons.arrow_forward_ios,
+                                          color: Color(0xff004bac))),
                                 ],
                               ),
                               Container(
                                   height: 35,
                                   decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 142, 204, 255),
+                                      border:
+                                          Border.all(color: Color(0xff004bac)),
                                       borderRadius: BorderRadius.circular(10)),
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
-                                    child: DropdownButton<String>(
-                                        items: items
-                                            .map((item) => DropdownMenuItem(
-                                                  child: Text(item),
-                                                  value: item,
-                                                ))
-                                            .toList(),
-                                        value: selectedItem,
-                                        onChanged: (item) {
-                                          setState(() {
-                                            selectedItem = item;
-                                          });
-                                        }),
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton<String>(
+                                          items: items
+                                              .map((item) => DropdownMenuItem(
+                                                    child: Text(item),
+                                                    value: item,
+                                                  ))
+                                              .toList(),
+                                          value: selectedItem,
+                                          onChanged: (item) {
+                                            setState(() {
+                                              selectedItem = item;
+                                            });
+                                          }),
+                                    ),
                                   ))
                             ],
                           ),
@@ -138,20 +148,38 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Column(
                                 children: [
-                                  Text('income'),
-                                  Text(incomeSum(sortedData).toString())
+                                  Text(
+                                    'Income',
+                                    style: TextStyle(
+                                        color: Colors.grey[500], fontSize: 15),
+                                  ),
+                                  Text(
+                                    '\u{20B9}${incomeSum(sortedData).toString()}',
+                                    style: TextStyle(color: Colors.green[800]),
+                                  )
                                 ],
                               ),
                               Column(
                                 children: [
-                                  Text('expense'),
-                                  Text(expenseSum(sortedData).toString())
+                                  Text('Expense',
+                                      style: TextStyle(
+                                          color: Colors.grey[500],
+                                          fontSize: 15)),
+                                  Text(
+                                    '\u{20B9}${expenseSum(sortedData).toString()}',
+                                    style: TextStyle(color: Colors.red[800]),
+                                  )
                                 ],
+
+                                //'\u{20B9}${your amount}'
                               ),
                               Column(
                                 children: [
-                                  Text('total'),
-                                  Text('${totalIncome - totalExpense!}')
+                                  Text('Total',
+                                      style: TextStyle(
+                                          color: Colors.grey[500],
+                                          fontSize: 15)),
+                                  Text('\u{20B9}${totalIncome - totalExpense!}')
                                 ],
                               ),
                             ],
@@ -204,42 +232,78 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             return GestureDetector(
                               onLongPress: () {
-                                newBox.delete(keys[index]);
+                                AlertDialog(
+                                  content: Text(
+                                      'Are you sure you want to delete this transaction?'),
+                                  actions: [
+                                    ElevatedButton(
+                                        onPressed: () {
+                                         newBox.delete(keys[index]);
+                                        },
+                                        child: Text('Confirm Delete'))
+                                  ],
+                                );
+                                
                               },
                               child: sortedData.isEmpty
                                   ? Center(
                                       child: Text('no transaction'),
                                     )
                                   : Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.all(6.0),
                                       child: Card(
-                                        color: sortedData[index]
-                                                    .transactionType ==
-                                                false
-                                            ? Color.fromARGB(255, 255, 173, 167)
-                                            : Color.fromARGB(
-                                                255, 172, 255, 188),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          side: BorderSide(
+                                            color: sortedData[index]
+                                                        .transactionType ==
+                                                    false
+                                                ? Color.fromARGB(255, 209, 2, 2)
+                                                : Color.fromARGB(
+                                                    255, 0, 162, 33),
+                                          ),
+                                        ),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Container(
-                                                child: Text(DateFormat(
-                                                        'dd-MM-yyyy')
-                                                    .format(sortedData[index]
-                                                        .dateOftransaction)),
-                                              ),
-                                            ),
-                                            Divider(),
                                             ListTile(
-                                              title: Text(sortedData[index]
-                                                  .categoryName),
-                                              trailing: Text(sortedData[index]
-                                                  .amount
-                                                  .toString()),
+                                              leading: CircleAvatar(
+                                                backgroundColor:
+                                                    Color(0xff004bac),
+                                                radius: 30,
+                                                child: Text(
+                                                    sortedData[index]
+                                                        .categoryName[0]
+                                                        .toUpperCase(),
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    )),
+                                              ),
+                                              title: Text(
+                                                sortedData[index].categoryName,
+                                                style: TextStyle(fontSize: 20),
+                                              ),
+                                              subtitle: Text(
+                                                  DateFormat('dd-MM-yyyy')
+                                                      .format(sortedData[index]
+                                                          .dateOftransaction)),
+                                              trailing: Text(
+                                                '\u{20B9}${sortedData[index].amount.toString()}',
+                                                style: TextStyle(
+                                                    fontSize: 17,
+                                                    color: sortedData[index]
+                                                                .transactionType ==
+                                                            false
+                                                        ? Color.fromARGB(
+                                                            255, 209, 2, 2)
+                                                        : Color.fromARGB(
+                                                            255, 0, 162, 33)),
+                                              ),
                                             )
                                           ],
                                         ),
@@ -253,21 +317,20 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: showFab
-            ? Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: FloatingActionButton.extended(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AddIncomeAndExpenseScreen()));
-                  },
-                  icon: Icon(Icons.add),
-                  label: Text('Add transaction'),
-                ),
-            )
-            : null);
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: FloatingActionButton.extended(
+            backgroundColor: KarchaFabcolor,
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddIncomeAndExpenseScreen()));
+            },
+            icon: Icon(Icons.add),
+            label: Text('Add transaction'),
+          ),
+        ));
   }
 
   double incomeSum(List<addExpAndIncModel> list) {

@@ -23,36 +23,40 @@ class CustomValuelistenableBuilder extends StatelessWidget {
       builder: (BuildContext ctx, Box<categoryModel> newBox, Widget? child) {
         List<categoryModel> categoryData = newBox.values.toList();
         List keys = newBox.keys.toList();
-        return ListView.builder(
-            itemCount: categoryData.length,
-            itemBuilder: (ctx, index) {
-              final data = categoryData[index];
+        return ListView.separated(
+          itemCount: categoryData.length,
+          itemBuilder: (ctx, index) {
+            final data = categoryData[index];
 
-              return ListTile(
-                onTap: (() {
-                  if (isTransactionType == true) {
-                    customFunction(categoryData[index].categoryName);
-                    Navigator.pop(context);
-                  } else {
-                    return;
-                  }
-                }),
-                title: data.categoryType == categoryType
-                    ? Text(data.categoryName)
-                    : Container(),
-                trailing: Wrap(
-                  children: [
-                    GestureDetector(
-                        onTap: () {},
-                        child: GestureDetector(
-                            onTap: () {
-                              newBox.delete(keys[index]);
-                            },
-                            child: Icon(Icons.delete)))
-                  ],
-                ),
-              );
-            });
+            return ListTile(
+              onTap: (() {
+                if (isTransactionType == true) {
+                  customFunction(categoryData[index].categoryName);
+                  Navigator.pop(context);
+                } else {
+                  return;
+                }
+              }),
+              title: data.categoryType == categoryType
+                  ? Text(data.categoryName)
+                  : Container(),
+              trailing: Wrap(
+                children: [
+                  GestureDetector(
+                      onTap: () {},
+                      child: GestureDetector(
+                          onTap: () {
+                            newBox.delete(keys[index]);
+                          },
+                          child: Icon(Icons.delete)))
+                ],
+              ),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return Divider();
+          },
+        );
       },
     );
   }

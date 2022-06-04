@@ -71,11 +71,15 @@ class _ExpenseChartScreenState extends State<ExpenseChartScreen> {
 
   // convert
 
-  // generate random color list for pie chart
+  // generate random primary  color list for pie chart
+
   List<Color> randomColorList(Box<categoryModel> colorBox) {
     List<Color> colorList = [];
     for (int i = 0; i < colorBox.length; i++) {
-      colorList.add(Color(Random().nextInt(0xffffffff)));
+      // only dense color
+
+      colorList
+          .add(Colors.primaries[Random().nextInt(Colors.primaries.length)]);
     }
     return colorList;
   }
@@ -85,30 +89,48 @@ class _ExpenseChartScreenState extends State<ExpenseChartScreen> {
     List<Total> totalOfChart = getTotalIncome(transactionBox, expenseBox);
     totalOfChart
         .forEach((Total) => map2[Total.categoryName] = Total.percentage);
-    return Column(
-      children: [
-        Card(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                  child: PieChart(
-                dataMap: map2,
-                colorList: randomColorList(expenseBox),
-                chartRadius: MediaQuery.of(context).size.width / 2,
-              )),
-            ],
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 40,
           ),
-        ),
-        Expanded(
-          child: Container(
-            child: ValueListenableBuilder(
-                valueListenable:
-                    Hive.box<addExpAndIncModel>('transactionBox').listenable(),
-                builder: (BuildContext context, Box<addExpAndIncModel> newBox,
-                    Widget? child) {
-                  List<Total> incomeList = getTotalIncome(newBox, expenseBox);
-                  return ListView.builder(
+          Container(
+            //backbround color of container
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: MediaQuery.of(context).size.height * 0.3,
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                      child: PieChart(
+                    dataMap: map2,
+                    colorList: randomColorList(expenseBox),
+                    chartRadius: MediaQuery.of(context).size.width / 2,
+                  )),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 190, 255, 193),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30))),
+              child: ValueListenableBuilder(
+                  valueListenable: Hive.box<addExpAndIncModel>('transactionBox')
+                      .listenable(),
+                  builder: (BuildContext context, Box<addExpAndIncModel> newBox,
+                      Widget? child) {
+                    List<Total> incomeList = getTotalIncome(newBox, expenseBox);
+                    return ListView.separated(
                       itemCount: incomeList.length,
                       itemBuilder: (context, index) {
                         return ListTile(
@@ -124,11 +146,19 @@ class _ExpenseChartScreenState extends State<ExpenseChartScreen> {
                             ),
                           )),
                         );
-                      });
-                }),
-          ),
-        )
-      ],
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return Divider(
+                          color: Colors.white,
+                          thickness: 1.5,
+                        );
+                      },
+                    );
+                  }),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

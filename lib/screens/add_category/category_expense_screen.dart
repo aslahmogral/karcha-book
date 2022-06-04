@@ -5,6 +5,8 @@ import 'package:money_manager_app/model/moneymanagermodel.dart';
 import 'package:money_manager_app/screens/widgets/custom_dialogbox.dart';
 import 'package:money_manager_app/screens/widgets/custom_valuelistenablebuilder.dart';
 
+import '../../functions/functions.dart';
+
 class ExpenseCategoryScreen extends StatefulWidget {
   const ExpenseCategoryScreen({Key? key}) : super(key: key);
 
@@ -18,13 +20,15 @@ class _ExpenseCategoryScreenState extends State<ExpenseCategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:  Colors.white,
       body: CustomValuelistenableBuilder(
         boxName: 'expenseCategoryBox',
         categoryType: false,
       ),
       
-      floatingActionButton: FloatingActionButton(
-        child:  Icon(Icons.add),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: KarchaFabcolor,
+       
         onPressed: () {
           showDialog(
               context: context,
@@ -34,7 +38,7 @@ class _ExpenseCategoryScreenState extends State<ExpenseCategoryScreen> {
                     box: expenseBox,
                     transactionType: false);
               });
-        },
+        }, label: Text('+ Add Expense Category',style: TextStyle(color: Colors.white),),
       ),
     );
   }

@@ -19,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool showFab = false;
+  bool showFab = true;
   ScrollController scrollController = ScrollController();
   var transactionBox = Hive.box<addExpAndIncModel>('transactionBox');
   double totalIncome = 0;
@@ -317,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: Padding(
+        floatingActionButton:showFab? Padding(
           padding: const EdgeInsets.all(10.0),
           child: FloatingActionButton.extended(
             backgroundColor: KarchaFabcolor,
@@ -330,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.add),
             label: Text('Add transaction'),
           ),
-        ));
+        ):null);
   }
 
   double incomeSum(List<addExpAndIncModel> list) {

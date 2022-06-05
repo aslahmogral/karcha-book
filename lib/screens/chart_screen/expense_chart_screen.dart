@@ -24,6 +24,7 @@ class _ExpenseChartScreenState extends State<ExpenseChartScreen> {
   Map<String, double> map2 = {};
 
   List<Total> totalExpense = [];
+  final sampleMap ={'no transaction': 0.0};
 
   List<Total> getTotalIncome(
       Box<addExpAndIncModel> newBox, Box<categoryModel> categoryBox) {
@@ -100,7 +101,7 @@ class _ExpenseChartScreenState extends State<ExpenseChartScreen> {
             //backbround color of container
             width: MediaQuery.of(context).size.width * 0.9,
             height: MediaQuery.of(context).size.height * 0.3,
-            child: Container(
+            child:map2.isNotEmpty? Container(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -111,6 +112,10 @@ class _ExpenseChartScreenState extends State<ExpenseChartScreen> {
                     chartRadius: MediaQuery.of(context).size.width / 2,
                   )),
                 ],
+              ),
+            ):Container(
+              child: Center(
+                child: Text('No Transaction'),
               ),
             ),
           ),

@@ -21,10 +21,10 @@ class _ExpenseCategoryScreenState extends State<ExpenseCategoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:  Colors.white,
-      body: CustomValuelistenableBuilder(
+      body:expenseBox.isNotEmpty? CustomValuelistenableBuilder(
         boxName: 'expenseCategoryBox',
         categoryType: false,
-      ),
+      ):Center(child: Text('No Expense Category Added'),),
       
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: KarchaFabcolor,

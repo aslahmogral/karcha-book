@@ -96,21 +96,26 @@ class _IncomeChartScreennState extends State<IncomeChartScreen> {
             height: 40,
           ),
           Container(
-            // add width to container
             width: MediaQuery.of(context).size.width * 0.9,
             height: MediaQuery.of(context).size.height * 0.3,
             child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                      child: PieChart(
-                    dataMap: map2,
-                    colorList: randomColorList(incomeBox),
-                    chartRadius: MediaQuery.of(context).size.width / 2,
-                  )),
-                ],
-              ),
+              child: map2.isNotEmpty
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                            child: PieChart(
+                          dataMap: map2,
+                          colorList: randomColorList(incomeBox),
+                          chartRadius: MediaQuery.of(context).size.width / 2,
+                        )),
+                      ],
+                    )
+                  : Container(
+                      child: Center(
+                        child: Text('No Transaction'),
+                      ),
+                    ),
             ),
           ),
           SizedBox(

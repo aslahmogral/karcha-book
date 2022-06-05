@@ -6,7 +6,6 @@ import 'package:money_manager_app/model/moneymanagermodel.dart';
 import 'package:money_manager_app/screens/widgets/custom_dialogbox.dart';
 import 'package:money_manager_app/screens/widgets/custom_valuelistenablebuilder.dart';
 
-
 class IncomeCategoryScreen extends StatefulWidget {
   const IncomeCategoryScreen({Key? key}) : super(key: key);
 
@@ -22,14 +21,19 @@ class _IncomeCategoryScreenState extends State<IncomeCategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:  Colors.white,
-
-
-      body: CustomValuelistenableBuilder(boxName: 'incomeCategoryBox', categoryType: true,),
-
-      floatingActionButton:  FloatingActionButton.extended(
+      backgroundColor: Colors.white,
+      body: incomeBox.isNotEmpty
+          ? CustomValuelistenableBuilder(
+              boxName: 'incomeCategoryBox',
+              categoryType: true,
+            )
+          : Container(
+              child: Center(
+                child: Text('No Income Category Added'),
+              ),
+            ),
+      floatingActionButton: FloatingActionButton.extended(
         backgroundColor: KarchaFabcolor,
-        
         onPressed: () {
           showDialog(
               context: context,
@@ -39,7 +43,11 @@ class _IncomeCategoryScreenState extends State<IncomeCategoryScreen> {
                     box: incomeBox,
                     transactionType: true);
               });
-        }, label:Text('+ Add Income Category',style: TextStyle(color: Colors.white),),
+        },
+        label: Text(
+          '+ Add Income Category',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     );
   }

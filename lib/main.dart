@@ -5,7 +5,6 @@ import 'package:money_manager_app/screens/bottom_navigation_screen.dart';
 
 import 'model/moneymanagermodel.dart';
 
-const colorP = const Color(0xFFB74093);
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

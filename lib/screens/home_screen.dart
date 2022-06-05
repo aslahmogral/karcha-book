@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Expanded(
-              child: ValueListenableBuilder(
+              child:transactionBox.isNotEmpty? ValueListenableBuilder(
                   valueListenable: Hive.box<addExpAndIncModel>('transactionBox')
                       .listenable(),
                   builder: (BuildContext ctx, Box<addExpAndIncModel> newBox,
@@ -312,7 +312,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           }),
                     );
-                  }),
+                  }):Container(
+                    child: Center(
+                      child: Text('No Transaction'),
+                    ),
+                  ),
             ),
           ],
         ),

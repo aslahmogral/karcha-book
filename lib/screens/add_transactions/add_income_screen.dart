@@ -120,23 +120,24 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ElevatedButton(
-                          onPressed: () {
-                            int amounts = int.parse(amountController.text);
-                            final inc = addExpAndIncModel(
-                                categoryName: categoryHintText.value,
-                                amount: amounts,
-                                dateOftransaction: date,
-                                transactionType: true);
-                            transactionBox.add(inc);
-                            print(inc.categoryType);
+                      Container(
+                        width: 120,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              int amounts = int.parse(amountController.text);
+                              final inc = addExpAndIncModel(
+                                  categoryName: categoryHintText.value,
+                                  amount: amounts,
+                                  dateOftransaction: date,
+                                  transactionType: true);
+                              transactionBox.add(inc);
+                              print(inc.categoryType);
 
-                            Navigator.pop(context);
-                          },
-                          child: Text('save')),
-                      ElevatedButton(onPressed: () {
-
-                      }, child: Text('Continue'))
+                              Navigator.pop(context);
+                            },
+                            child: Text('Save')),
+                      ),
+                     
                     ],
                   ),
                 ],

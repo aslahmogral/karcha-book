@@ -119,21 +119,23 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ElevatedButton(
-                          onPressed: () {
-                            
-                            int amounts = int.parse(amountController.text);
-                            final exp = addExpAndIncModel(
-                                categoryName: categoryHintText.value,
-                                amount: amounts,
-                                dateOftransaction: date,
-                                transactionType: false);
-                            transactionBox.add(exp);
+                      Container(
+                        width: 120,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              
+                              int amounts = int.parse(amountController.text);
+                              final exp = addExpAndIncModel(
+                                  categoryName: categoryHintText.value,
+                                  amount: amounts,
+                                  dateOftransaction: date,
+                                  transactionType: false);
+                              transactionBox.add(exp);
 
-                            Navigator.pop(context);
-                          },
-                          child: Text('save')),
-                      ElevatedButton(onPressed: () {}, child: Text('Continue'))
+                              Navigator.pop(context);
+                            },
+                            child: Text('Save'),),
+                      ),
                     ],
                   ),
                 ],
